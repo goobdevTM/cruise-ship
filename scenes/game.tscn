@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dpxl0j3v0p3n0"]
+
+[node name="Game" type="Node2D" unique_id=1329257683]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=664488947]
