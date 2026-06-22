@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://dv0svylqqft4y"]
+
+[ext_resource type="Shader" uid="uid://bulcjpf3rlago" path="res://shaders/water.gdshader" id="1_ycv7n"]
+[ext_resource type="Texture2D" uid="uid://dosfadddaxq4" path="res://sprites/pirate_ship_top_down.png" id="2_khtih"]
+[ext_resource type="Script" uid="uid://c7whk1yjq15rl" path="res://scripts/ship.gd" id="3_0posc"]
+[ext_resource type="Script" uid="uid://cnonbr4sg1yil" path="res://scripts/camera_sailing.gd" id="4_2twtc"]
+[ext_resource type="Texture2D" uid="uid://3rc6esrsnfgo" path="res://icon.svg" id="5_3co0u"]
+[ext_resource type="Texture2D" uid="uid://u1aaampm1oeo" path="res://sprites/minimap_container.png" id="6_588yo"]
+[ext_resource type="Texture2D" uid="uid://ddi8o4hnne0ek" path="res://sprites/minimap_icon.png" id="7_i62hm"]
+
+[sub_resource type="Gradient" id="Gradient_lbhrr"]
+offsets = PackedFloat32Array(0.3880597, 0.79850745, 1)
+colors = PackedColorArray(0.026699973, 0.22813684, 0.89, 1, 0, 0.3166668, 0.95, 1, 0, 0.4500003, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_p57ef"]
+gradient = SubResource("Gradient_lbhrr")
+width = 16
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_iywne"]
+noise_type = 2
+frequency = 0.0625
+fractal_type = 3
+fractal_octaves = 3
+fractal_lacunarity = 2.515
+fractal_gain = 0.45
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lbhrr"]
+noise = SubResource("FastNoiseLite_iywne")
+seamless = true
+seamless_blend_skirt = 0.046
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8il8q"]
+shader = ExtResource("1_ycv7n")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_lbhrr")
+shader_parameter/noise_tex_size = Vector2(8192, 8192)
+shader_parameter/color_ramp = SubResource("GradientTexture1D_p57ef")
+shader_parameter/color_amount = 4
+shader_parameter/wave_speed = 0.05
+shader_parameter/frequency_x = 8.0
+shader_parameter/frequency_y = 8.0
+shader_parameter/amplitude_x = 0.02
+shader_parameter/amplitude_y = 0.02
+shader_parameter/pixel_amount = 8192.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_8il8q"]
+polygon = PackedVector2Array(0, 4, 0, 0, 32, 0, 32, -24, 40, -24, 40, -20, 44, -20, 44, -16, 48, -16, 48, -8, 52, -8, 52, -4, 100, -4, 100, 0, 104, 0, 104, -12, 112, -12, 112, -8, 116, -8, 116, -4, 120, -4, 120, 0, 124, 0, 124, 4, 132, 4, 132, 8, 140, 8, 140, 12, 148, 12, 148, 16, 156, 16, 156, 20, 164, 20, 164, 24, 192, 24, 192, 32, 164, 32, 164, 36, 156, 36, 156, 40, 148, 40, 148, 44, 140, 44, 140, 48, 132, 48, 132, 52, 124, 52, 124, 56, 120, 56, 120, 60, 116, 60, 116, 64, 112, 64, 112, 68, 104, 68, 104, 56, 100, 56, 100, 60, 52, 60, 52, 64, 48, 64, 48, 72, 44, 72, 44, 76, 40, 76, 40, 80, 32, 80, 32, 56, 0, 56, 0, 52, -24, 52, -24, 48, -36, 48, -36, 44, -44, 44, -44, 12, -36, 12, -36, 8, -24, 8, -24, 4)
+
+[node name="Sailing" type="Node2D" unique_id=1329257683]
+
+[node name="Water" type="Node2D" parent="." unique_id=1264337749]
+
+[node name="Water" type="ColorRect" parent="Water" unique_id=693215006]
+material = SubResource("ShaderMaterial_8il8q")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 8192.0
+offset_bottom = 8192.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ShipShadow" type="Sprite2D" parent="." unique_id=1158057993]
+modulate = Color(0, 0, 0, 0.24705882)
+position = Vector2(217, 130)
+scale = Vector2(1.01, 1.01)
+texture = ExtResource("2_khtih")
+
+[node name="Ship" type="CharacterBody2D" parent="." unique_id=1264300092]
+position = Vector2(4096, 4096)
+script = ExtResource("3_0posc")
+
+[node name="Model" type="Node2D" parent="Ship" unique_id=1212066283]
+position = Vector2(29, 0)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Ship/Model" unique_id=1251213571]
+position = Vector2(-18, -7)
+scale = Vector2(0.25, 0.25)
+occluder = SubResource("OccluderPolygon2D_8il8q")
+
+[node name="Sprite" type="Sprite2D" parent="Ship/Model" unique_id=1536769207]
+texture = ExtResource("2_khtih")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=358059363]
+zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+limit_right = 8192
+limit_bottom = 8192
+script = ExtResource("4_2twtc")
+
+[node name="GUI" type="CanvasLayer" parent="." unique_id=2002693918]
+
+[node name="Minimap" type="Control" parent="GUI" unique_id=1418835521]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_right = -64.0
+offset_bottom = 64.0
+grow_horizontal = 0
+scale = Vector2(2, 2)
+
+[node name="BG" type="TextureRect" parent="GUI/Minimap" unique_id=151439517]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_3co0u")
+expand_mode = 1
+
+[node name="BG2" type="TextureRect" parent="GUI/Minimap" unique_id=1354184694]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -9.0
+offset_top = 7.0
+offset_right = -7.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_588yo")
+expand_mode = 1
+
+[node name="Icon" type="TextureRect" parent="GUI/Minimap" unique_id=2099342508]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = 8.0
+offset_right = -68.0
+offset_bottom = -52.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_transform_enabled = true
+texture = ExtResource("7_i62hm")
+expand_mode = 1
