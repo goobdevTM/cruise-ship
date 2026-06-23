@@ -1,5 +1,30 @@
 [gd_scene format=3 uid="uid://dpxl0j3v0p3n0"]
 
+[ext_resource type="Script" uid="uid://dr52oxpbaqftj" path="res://scripts/player.gd" id="1_lnu2h"]
+[ext_resource type="Texture2D" uid="uid://c2g128f2n6qyf" path="res://sprites/player.png" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://dqa7xhoxpmka7" path="res://scripts/camera.gd" id="3_lbhrr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8il8q"]
+radius = 8.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_8il8q"]
+
 [node name="Game" type="Node2D" unique_id=1345796602]
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1269231273]
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1269231273]
+position = Vector2(0, -8)
+script = ExtResource("1_lnu2h")
+
+[node name="Sprite" type="Sprite2D" parent="Player" unique_id=1368421969]
+texture = ExtResource("1_uwrxv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=327623778]
+shape = SubResource("CircleShape2D_8il8q")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1565348431]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1027469990]
+shape = SubResource("WorldBoundaryShape2D_8il8q")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=322319131]
+script = ExtResource("3_lbhrr")
